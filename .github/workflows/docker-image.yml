@@ -8,7 +8,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  CONTAINER_IMAGE: ${{ env.REGISTRY }}/${{ github.repository }}
+  CONTAINER_IMAGE: ${{ github.repository }}
 
 jobs:
   example_matrix:
@@ -29,7 +29,7 @@ jobs:
       - name: Build the Docker image
         run: |
           cd ./${{ matrix.php }}/${{ matrix.base }}/${{ matrix.type }};
-          docker build . --tag ${{ env.CONTAINER_IMAGE }}:${{ matrix.php }}-${{ matrix.base }}-${{ matrix.type }};
+          docker build . --tag ${{ env.REGISTRY }}/${{ env.CONTAINER_IMAGE }}:${{ matrix.php }}-${{ matrix.base }}-${{ matrix.type }};
       - name: Push the Docker image
         run: |
-          docker push ${{ env.CONTAINER_IMAGE }}:${{ matrix.php }}-${{ matrix.base }}-${{ matrix.type }};
+          docker push ${{ env.REGISTRY }}/${{ env.CONTAINER_IMAGE }}:${{ matrix.php }}-${{ matrix.base }}-${{ matrix.type }};
