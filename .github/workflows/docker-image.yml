@@ -1,0 +1,18 @@
+name: Docker Image CI
+
+on:
+  schedule:
+  - cron: "0 0 * * 1"
+
+jobs:
+  example_matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        BASE: [buster]
+        PHP: [7.4]
+        TYPE: [pimcore-node16, pimcore-c1]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the Docker image
+        run: docker build --file ./${PHP}/${BASE}/${TYPE}/Dockerfile --tag php-environments:${PHP}-${BASE}-${TYPE}
