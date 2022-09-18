@@ -36,9 +36,12 @@ RUN mv composer.phar /usr/bin/composer
 RUN chmod 755 /usr/bin/composer
 
 
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+RUN php -r "copy('https://kurzor-helper-files.s3-eu-west-1.amazonaws.com/nodejs/setup_12.sh', 'node_setup.sh');"
+RUN php -r "copy('https://kurzor-helper-files.s3-eu-west-1.amazonaws.com/nodejs/setup_12.sh.sig', 'node_setup.sh.sig');"
+RUN curl https://kurzor-helper-files.s3-eu-west-1.amazonaws.com/hkar.asc | gpg --import
+RUN gpg --verify node_setup.sh.sig node_setup.sh
+RUN bash node_setup.sh && rm node_setup.sh node_setup.sh.sig
 RUN apt-get install -y nodejs
-RUN npm install -g npm@8
 RUN npm install -g less
 RUN npm install gulp-cli -g
 RUN npm install gulp -D

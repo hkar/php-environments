@@ -20,7 +20,7 @@ jobs:
       matrix:
         base: [buster]
         php: [7.4]
-        type: [pimcore-node16, pimcore-c1]
+        type: [pimcore-node16, pimcore-c1, pimcore, apache]
     steps:
       - uses: actions/checkout@v3
 

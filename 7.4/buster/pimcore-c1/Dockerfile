@@ -1,4 +1,4 @@
-FROM public.ecr.aws/t9u2n8u2/php:7.4-buster-apache
+FROM public.ecr.aws/docker/library/php:7.4-apache-buster
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV DOCUMENT_ROOT /var/www/html
