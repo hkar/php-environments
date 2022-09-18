@@ -23,13 +23,28 @@ jobs:
         type: [pimcore-node16, pimcore-c1]
     steps:
       - uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      
       - name: Docker login to github packages
         run: |
           docker login -p ${{ secrets.GITHUB_TOKEN }} -u ${{ github.actor }} ${{ env.REGISTRY }}
+      
       - name: Build the Docker image
         run: |
           cd ./${{ matrix.php }}/${{ matrix.base }}/${{ matrix.type }};
-          docker build . --tag ${{ env.REGISTRY }}/${{ env.CONTAINER_IMAGE }}:${{ matrix.php }}-${{ matrix.base }}-${{ matrix.type }};
+          docker build . --tag ${{ env.REGISTRY }}/${{ env.CONTAINER_IMAGE }}:${{ matrix.php }}-${{ matrix.base }}-${{ matrix.type }} --tag public.ecr.aws/u4m5g7k3/php-environments:${{ matrix.php }}-${{ matrix.base }}-${{ matrix.type }};
+      
       - name: Push the Docker image
         run: |
           docker push ${{ env.REGISTRY }}/${{ env.CONTAINER_IMAGE }}:${{ matrix.php }}-${{ matrix.base }}-${{ matrix.type }};
+          docker push public.ecr.aws/u4m5g7k3/php-environments:${{ matrix.php }}-${{ matrix.base }}-${{ matrix.type }};
