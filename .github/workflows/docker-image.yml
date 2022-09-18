@@ -26,7 +26,6 @@ jobs:
       - name: Docker login to github packages
         run: |
           docker login -p ${{ secrets.GITHUB_TOKEN }} -u ${{ github.actor }} ${{ env.REGISTRY }}
-          docker build . --tag php-environments:${{ matrix.php }}-${{ matrix.base }}-${{ matrix.type }};
       - name: Build the Docker image
         run: |
           cd ./${{ matrix.php }}/${{ matrix.base }}/${{ matrix.type }};
