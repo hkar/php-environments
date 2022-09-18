@@ -6,10 +6,16 @@ on:
   push:
     branches: ['master']
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   example_matrix:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     strategy:
       matrix:
         base: [buster]
@@ -17,6 +23,10 @@ jobs:
         type: [pimcore-node16, pimcore-c1]
     steps:
       - uses: actions/checkout@v3
+      - name: Docker login to github packages
+        run: |
+          docker login -p ${{ secrets.GITHUB_TOKEN }} -u ${{ github.actor }} ${{ env.REGISTRY }}
+          docker build . --tag php-environments:${{ matrix.php }}-${{ matrix.base }}-${{ matrix.type }};
       - name: Build the Docker image
         run: |
           cd ./${{ matrix.php }}/${{ matrix.base }}/${{ matrix.type }};
